@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "include/test.h"
 #include "assignment.h"  // Assuming this is the student's DFA implementation
 
 // Test case 1: Valid string
