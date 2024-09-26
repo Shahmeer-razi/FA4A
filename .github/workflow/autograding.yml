@@ -1,0 +1,32 @@
+name: Auto grading
+
+# This tells GitHub to run the action when code is pushed or a pull request is created
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest version of Ubuntu
+
+    steps:
+      # Step 1: Check out the student's code (from the repository)
+      - uses: actions/checkout@v2
+
+      # Step 2: Install necessary C++ compiler and Google Test libraries
+      - name: Install dependencies
+        run: sudo apt-get install g++ cmake libgtest-dev
+
+      # Step 3: Build Google Test (to allow testing C++ code)
+      - name: Build Google Test
+        run: |
+          cd /usr/src/gtest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp *.a /usr/lib
+
+      # Step 4: Compile the student's C++ code along with the test cases
+      - name: Compile assignment and test cases
+        run: g++ -std=c++11 -isystem /usr/include/gtest -pthread assignment.cpp test_assignment.cpp -o test_assignment
+
+      # Step 5: Run the tests and provide feedback
+      - name: Run the tests
+        run: ./test_assignment
